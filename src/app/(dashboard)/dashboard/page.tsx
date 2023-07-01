@@ -10,7 +10,7 @@ const Dashboard = async ({}) => {
   return (
     <div>
       <Button>Dasboard</Button>
-      <pre>{JSON.stringify(session)}</pre>
+      {/* <pre>{JSON.stringify(session)}</pre> */}
     </div>
   );
 };
