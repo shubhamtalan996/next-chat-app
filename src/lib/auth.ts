@@ -3,6 +3,7 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "./db";
 import { getEnvVariable } from "./utils";
+import { fetchRedis } from "@/helpers/redis";
 
 export const authOptions: NextAuthOptions = {
   adapter: UpstashRedisAdapter(db),
@@ -20,12 +21,17 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      const dbUser = (await db.get(`user:${token.id}`)) as User | null;
+      // const dbUser = (await db.get(`user:${token.id}`)) as User | null;
+      const dbUserResponse = (await fetchRedis("get", `user:${token.id}`)) as
+        | string
+        | null;
 
-      if (!dbUser) {
+      if (!dbUserResponse) {
         token.id = user!.id;
         return token;
       }
+
+      const dbUser = JSON.parse(dbUserResponse) as User;
 
       return {
         id: dbUser.id,
