@@ -1,15 +1,10 @@
 "use client";
 
-import React, {
-  ButtonHTMLAttributes,
-  FC,
-  HtmlHTMLAttributes,
-  useState,
-} from "react";
-import Button from "./UI/Button";
-import { toast } from "react-hot-toast";
 import { Loader2, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { ButtonHTMLAttributes, FC, useState } from "react";
+import { toast } from "react-hot-toast";
+import Button from "./UI/Button";
 
 interface SignOutButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
@@ -33,7 +28,7 @@ const SignOutButton: FC<SignOutButtonProps> = ({ ...props }) => {
       {isSigningOut ? (
         <Loader2 className="animate-spin h-4 w-4" />
       ) : (
-        <LogOut className="W-4 H-4 cursor-pointer" />
+        <LogOut className="w-4 h-4" />
       )}
     </Button>
   );
