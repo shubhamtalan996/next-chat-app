@@ -19,10 +19,11 @@ const getChatMessages = async (chatId: string) => {
   try {
     const result: string[] = await fetchRedis(
       "zrange",
-      `chat:${chatId}`,
+      `chat:${chatId}:messages`,
       0,
       -1
     );
+
     const dbResult = result.map((message) => JSON.parse(message) as Message);
     const reversedDbMessages = dbResult.reverse();
 
@@ -75,7 +76,13 @@ const page = async ({ params }: pageProps) => {
           </div>
         </div>
       </div>
-      <Messages sessionId={session.user.id} initialMessages={initialMessages} />
+      <Messages
+        sessionId={session.user.id}
+        chatId={chatId}
+        sessionImage={session.user.image}
+        chatPartner={chatPartner}
+        initialMessages={initialMessages}
+      />
       <ChatInput chatId={chatId} chatPartner={chatPartner} />
     </div>
   );

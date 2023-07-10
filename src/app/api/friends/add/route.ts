@@ -1,6 +1,8 @@
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { fetchRedis } from "@/lib/helpers/redis";
+import { pusherServer } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 import { addFriendValidator } from "@/lib/validators/add-friend";
 import { AxiosError } from "axios";
 import { getServerSession } from "next-auth";
@@ -64,10 +66,18 @@ export const POST = async (req: Request) => {
       return new Response("Aready a friend", { status: 400 });
     }
 
-    /** Initiating valid request */
-    console.log({ idToAdd });
+    await pusherServer.trigger(
+      toPusherKey(`user:${idToAdd}:incoming_friend_requests`),
+      "incoming_friend_requests",
+      {
+        senderId: session.user.id,
+        senderEmail: session.user.email,
+      }
+    );
 
+    /** Initiating valid request */
     db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
+
     return new Response("OK");
   } catch (error) {
     if (error instanceof z.ZodError) {

@@ -37,7 +37,6 @@ const Layout = async ({ children }: LayoutProps) => {
   if (!session) return notFound();
 
   const friends = await getFriendsByUserId(session.user.id);
-  console.log("friends", friends);
 
   const unseenRequestCount = (
     (await fetchRedis(
@@ -116,7 +115,9 @@ const Layout = async ({ children }: LayoutProps) => {
           </ul>
         </nav>
       </div>
-      {children}
+      <aside className="max-h-screen container py-16 md:py-12 w-full">
+        {children}
+      </aside>
     </div>
   );
 };
