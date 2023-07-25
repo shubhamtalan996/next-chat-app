@@ -4,11 +4,22 @@ import Button from "@/components/UI/Button";
 import React, { FC, useState } from "react";
 import { signIn } from "next-auth/react";
 import { toast } from "react-hot-toast";
+import Image from "next/image";
+import { PNG } from "@/assets";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 interface LoginProps {}
 
-const Login: FC<LoginProps> = ({}) => {
+const Login: FC<LoginProps> = async ({}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const session = await getServerSession(authOptions);
+
+  if (session?.user?.id) {
+    redirect("/dashboard");
+  }
 
   const loginWithGoogle = async () => {
     setIsLoading(true);
@@ -27,7 +38,21 @@ const Login: FC<LoginProps> = ({}) => {
       <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full flex flex-col items-center max-w-md space-y-8">
           <div className="flex flex-col items-center gap-8">
-            logo
+            <Image
+              height={200}
+              width={200}
+              referrerPolicy="no-referrer"
+              className="rounded-full"
+              src={PNG.darthLogo}
+              alt="Your profile picture"
+            />
+
+            <p className="text-2xl font-semibold font-sans">
+              Welcome to&nbsp;
+              <span className="bg-gradient-to-r from-green-300 to-red-600">
+                Darth&apos;s chat
+              </span>
+            </p>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-90">
               Sign in to your account
             </h2>

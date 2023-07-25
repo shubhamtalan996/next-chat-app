@@ -12,6 +12,7 @@ import { fetchRedis } from "@/helpers/redis";
 import { SidebarOption } from "@/types/typings";
 import SidebarChatList from "@/components/SidebarChatList";
 import MobileChatLayout from "@/components/MobileChatLayout";
+import { PNG } from "@/assets";
 
 interface LayoutProps {
   children: ReactNode;
@@ -55,10 +56,20 @@ const Layout = async ({ children }: LayoutProps) => {
       </div>
       <div className="hidden md:flex h-full w-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-grey-200 bg-white px-6">
         <Link href="/dashboard" className="flex h-16 shrink-0 items-center">
-          <Icons.Logo className="h-8 w-auto text-indigo-100" />
+          <Image
+            height={40}
+            width={40}
+            referrerPolicy="no-referrer"
+            className="rounded-full"
+            src={PNG.darthLogo}
+            alt="Your profile picture"
+          />
+          <p className=" ml-4 text-sm font-semibold leading-6 bg-gradient-to-r from-green-300">
+            Darth&apos;s Chat
+          </p>
         </Link>
         {friends.length > 0 ? (
-          <div className="text-xs font-semibold leading-6 text-gray-400">
+          <div className="text-xs font-semibold leading-6 text-black-400">
             Your chats
           </div>
         ) : null}
