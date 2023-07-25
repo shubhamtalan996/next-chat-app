@@ -3,7 +3,7 @@ import Image from "next/image";
 import { authOptions } from "@/lib/auth";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getFriendsByUserId } from "@/helpers/get-friends-by-user-id";
 import React, { FC, ReactNode } from "react";
 import SignOutButton from "@/components/SignOutButton";
@@ -29,7 +29,10 @@ const SidebarOptions: SidebarOption[] = [
 const Layout = async ({ children }: LayoutProps) => {
   const session = await getServerSession(authOptions);
 
-  if (!session) return notFound();
+  if (!session) {
+    redirect("/login");
+    return notFound();
+  }
 
   const friends = await getFriendsByUserId(session.user.id);
 

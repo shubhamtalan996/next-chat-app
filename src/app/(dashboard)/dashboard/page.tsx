@@ -13,7 +13,9 @@ import React, { FC } from "react";
 const Dashboard = async ({}) => {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user.id) notFound();
+  if (!session?.user?.id) {
+    notFound();
+  }
 
   const friends = await getFriendsByUserId(session.user.id);
 
