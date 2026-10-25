@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { nanoid } from "nanoid";
 import { getServerSession } from "next-auth";
 import { Message, messageValidator } from "@/lib/validators/message";
-import { pusherServer } from "@/lib/pusher";
+import { getPusherServer } from "@/lib/pusher";
 import { toPusherKey } from "@/lib/utils";
 
 export const POST = async (req: Request) => {
@@ -55,13 +55,13 @@ export const POST = async (req: Request) => {
       member: JSON.stringify(message),
     });
 
-    await pusherServer.trigger(
+    await getPusherServer().trigger(
       toPusherKey(`chat:${chatId}:incoming_messages`),
       "incoming_messages",
       messageData
     );
 
-    await pusherServer.trigger(
+    await getPusherServer().trigger(
       toPusherKey(`user:${friendId}:chats`),
       "new_message",
       {

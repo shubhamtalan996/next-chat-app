@@ -4,7 +4,7 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { Message } from "@/lib/validators/message";
 import { cn, toPusherKey } from "@/lib/utils";
 import Image from "next/image";
-import { pusherClient } from "@/lib/pusher";
+import { getPusherClient } from "@/lib/pusher";
 
 interface MessagesProps {
   sessionId: string;
@@ -35,7 +35,7 @@ const Messages: FC<MessagesProps> = ({
   };
 
   useEffect(() => {
-    pusherClient.subscribe(toPusherKey(`chat:${chatId}:incoming_messages`));
+    getPusherClient().subscribe(toPusherKey(`chat:${chatId}:incoming_messages`));
 
     const messagesHandler = (message: Message) => {
       setMessages((prev) => {
@@ -43,12 +43,12 @@ const Messages: FC<MessagesProps> = ({
         return updatedMessages;
       });
     };
-    pusherClient.bind("incoming_messages", messagesHandler);
+    getPusherClient().bind("incoming_messages", messagesHandler);
 
     return () => {
-      pusherClient.unsubscribe(toPusherKey(`chat:${chatId}:incoming_messages`));
+      getPusherClient().unsubscribe(toPusherKey(`chat:${chatId}:incoming_messages`));
 
-      pusherClient.unbind("incoming_messages", messagesHandler);
+      getPusherClient().unbind("incoming_messages", messagesHandler);
     };
   }, [chatId]);
 

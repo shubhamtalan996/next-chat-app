@@ -1,6 +1,6 @@
 "use client";
 
-import { pusherClient } from "@/lib/pusher";
+import { getPusherClient } from "@/lib/pusher";
 import { toPusherKey } from "@/lib/utils";
 import axios from "axios";
 import { Check, UserPlus, X } from "lucide-react";
@@ -28,7 +28,7 @@ const FriendRequests: FC<FriendRequestsProps> = ({
   };
 
   useEffect(() => {
-    pusherClient.subscribe(
+    getPusherClient().subscribe(
       toPusherKey(`user:${sessionId}:incoming_friend_requests`)
     );
 
@@ -39,14 +39,14 @@ const FriendRequests: FC<FriendRequestsProps> = ({
       setFriendRequests((prev) => [...prev, { senderId, senderEmail }]);
     };
 
-    pusherClient.bind("incoming_friend_requests", friendRequestHandler);
+    getPusherClient().bind("incoming_friend_requests", friendRequestHandler);
 
     return () => {
-      pusherClient.unsubscribe(
+      getPusherClient().unsubscribe(
         toPusherKey(`user:${sessionId}:incoming_friend_requests`)
       );
 
-      pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
+      getPusherClient().unbind("incoming_friend_requests", friendRequestHandler);
     };
   }, [sessionId]);
 

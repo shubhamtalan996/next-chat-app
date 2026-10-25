@@ -1,6 +1,6 @@
 "use client";
 
-import { pusherClient } from "@/lib/pusher";
+import { getPusherClient } from "@/lib/pusher";
 import { chatHrefContructor, toPusherKey } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import React, { FC, useEffect, useState } from "react";
@@ -22,8 +22,8 @@ const SidebarChatList: FC<SidebarChatListProps> = ({ sessionId, friends }) => {
   const [unseenMessages, setUnseenMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    pusherClient.subscribe(toPusherKey(`user:${sessionId}:chats`));
-    pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`));
+    getPusherClient().subscribe(toPusherKey(`user:${sessionId}:chats`));
+    getPusherClient().subscribe(toPusherKey(`user:${sessionId}:friends`));
 
     const chatHandler = (message: ExtendedMessage) => {
       const shouldNotify =
@@ -51,11 +51,11 @@ const SidebarChatList: FC<SidebarChatListProps> = ({ sessionId, friends }) => {
       router.refresh();
     };
 
-    pusherClient.bind("new_message", chatHandler);
-    pusherClient.bind("new_friend", newFriendHandler);
+    getPusherClient().bind("new_message", chatHandler);
+    getPusherClient().bind("new_friend", newFriendHandler);
     return () => {
-      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:chats`));
-      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`));
+      getPusherClient().unsubscribe(toPusherKey(`user:${sessionId}:chats`));
+      getPusherClient().unsubscribe(toPusherKey(`user:${sessionId}:friends`));
     };
   }, [sessionId, router, pathname]);
 
