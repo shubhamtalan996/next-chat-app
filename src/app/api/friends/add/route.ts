@@ -1,7 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { fetchRedis } from "@/lib/helpers/redis";
-import { pusherServer } from "@/lib/pusher";
+import { getPusherServer } from "@/lib/pusher";
 import { toPusherKey } from "@/lib/utils";
 import { addFriendValidator } from "@/lib/validators/add-friend";
 import { AxiosError } from "axios";
@@ -66,7 +66,7 @@ export const POST = async (req: Request) => {
       return new Response("Aready a friend", { status: 400 });
     }
 
-    await pusherServer.trigger(
+    await getPusherServer().trigger(
       toPusherKey(`user:${idToAdd}:incoming_friend_requests`),
       "incoming_friend_requests",
       {
